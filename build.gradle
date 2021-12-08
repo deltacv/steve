@@ -1,15 +1,14 @@
-plugins {
-    id 'java'
-    id 'org.jetbrains.kotlin.jvm' version '1.5.31'
-}
+buildscript {
+    ext {
+        opencv_version = '4.5.1-2'
+        kotlin_version = '1.5.31'
+    }
 
-group 'io.github.deltacv'
-version '1.0.0'
+    repositories {
+        mavenCentral()
+    }
 
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
 }
