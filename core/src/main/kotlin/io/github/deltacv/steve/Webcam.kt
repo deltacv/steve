@@ -23,11 +23,17 @@
 
 package io.github.deltacv.steve
 
-import com.github.serivesmejia.eocvsim.input.camera.WebcamRotation
+import io.github.deltacv.steve.opencv.OpenCvWebcamBackend
 import org.opencv.core.Mat
 import org.opencv.core.Size
 
 interface Webcam {
+
+    companion object {
+        var backend: WebcamBackend = OpenCvWebcamBackend
+
+        val availableWebcams get() = backend.availableWebcams
+    }
 
     val isOpen: Boolean
 
