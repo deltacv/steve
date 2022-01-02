@@ -25,16 +25,16 @@ package io.github.deltacv.steve.openimaj
 
 import io.github.deltacv.steve.WebcamBase
 import io.github.deltacv.steve.WebcamRotation
-import com.github.serivesmejia.eocvsim.util.Log
-import com.github.serivesmejia.eocvsim.util.fps.FpsLimiter
+import io.github.deltacv.steve.util.FpsLimiter
 import io.github.deltacv.steve.commonResolutions
-import org.firstinspires.ftc.robotcore.internal.collections.EvictingBlockingQueue
+import io.github.deltacv.steve.util.EvictingBlockingQueue
 import org.opencv.core.CvType
 import org.opencv.core.Mat
 import org.opencv.core.Size
-import org.openftc.easyopencv.MatRecycler
+import io.github.deltacv.steve.util.MatRecycler
 import org.openimaj.video.capture.Device
 import org.openimaj.video.capture.VideoCapture
+import org.slf4j.LoggerFactory
 import java.util.concurrent.ArrayBlockingQueue
 
 class OpenIMAJWebcam @JvmOverloads constructor(
@@ -45,10 +45,6 @@ class OpenIMAJWebcam @JvmOverloads constructor(
     override val index: Int = -1
 ) : WebcamBase(rotation) {
 
-    companion object {
-        const val TAG = "OpenIMAJWebcam"
-    }
-
     override val isOpen get() = videoCapture != null && videoCapture!!.hasNextFrame()
 
     override var resolution = resolution
@@ -58,7 +54,7 @@ class OpenIMAJWebcam @JvmOverloads constructor(
         }
 
     override val supportedResolutions get() = commonResolutions
-    
+
     override val name: String get() = device.nameStr
 
     override var fps = fps
@@ -66,6 +62,8 @@ class OpenIMAJWebcam @JvmOverloads constructor(
             assertNotOpen("change fps")
             field = value
         }
+
+    val logger = LoggerFactory.getLogger(this::class.java)
 
     var videoCapture: VideoCapture? = null
         private set
@@ -111,7 +109,7 @@ class OpenIMAJWebcam @JvmOverloads constructor(
 
             streamThread!!.start()
         } catch(e: Exception) {
-            Log.error(TAG, "Error while opening camera", e)
+            logger.error("Error while opening camera", e)
 
             videoCapture = null
             streamThread?.interrupt()
@@ -120,7 +118,7 @@ class OpenIMAJWebcam @JvmOverloads constructor(
 
     override fun internalRead(mat: Mat) {
         if(!streamThread!!.isAlive) {
-            Log.warn(TAG, "The WebcamStream thread mysteriously disappeared, probably due to an exception. Closing webcam \"$name\".")
+            logger.warn("The WebcamStream thread mysteriously disappeared, probably due to an exception. Closing webcam \"$name\".")
             close()
             return
         }
@@ -166,6 +164,8 @@ class OpenIMAJWebcam @JvmOverloads constructor(
         private val recycler = MatRecycler(matQueueSize + 2, height, width, CvType.CV_8UC3)
         private val pixels = ByteArray(width * height * 3)
 
+        val logger = LoggerFactory.getLogger(this::class.java)
+
         override fun run() {
             queue.setEvictAction {
                 it.returnMat()
@@ -196,7 +196,7 @@ class OpenIMAJWebcam @JvmOverloads constructor(
                     // copied from the original source code of VideoCapture.
                     // no idea what the < -1 error codes stand for.
                     if (err == -1) {
-                        Log.warn(TAG, "Timed out waiting for next frame of \"${webcam.name}\"")
+                        logger.warn("Timed out waiting for next frame of \"${webcam.name}\"")
                         return@synchronized
                     } else if (err < -1) {
                         throw RuntimeException("Error occurred getting next frame (code: $err)")
@@ -215,7 +215,7 @@ class OpenIMAJWebcam @JvmOverloads constructor(
                     // It *shouldn't* happen since we don't allow the resolution to be changed in the middle of
                     // a running camera stream, but we implement this check regardless to see if it fixes the issue
                     if(resolution.width.toInt() != width || resolution.height.toInt() != height) {
-                        Log.warn(TAG, "Grabber currently has a resolution different than the initial one ($resolution vs initial Size($width, $height))")
+                        logger.warn("Grabber currently has a resolution different than the initial one ($resolution vs initial Size($width, $height))")
                         return@synchronized // continue;
                     }
 
