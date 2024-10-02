@@ -1,0 +1,11 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm'
+}
+
+apply from: '../build.common.gradle'
+
+dependencies {
+    implementation project(':core')
+    implementation project(':backend-openpnp')
+    implementation "org.openpnp:opencv:$opencv_version"
+}

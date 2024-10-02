@@ -27,7 +27,9 @@ package io.github.deltacv.steve
 import org.opencv.core.Core
 import org.opencv.core.Mat
 
-abstract class WebcamBase(rotation: WebcamRotation) : Webcam {
+abstract class WebcamBase(
+    rotation: WebcamRotation
+) : Webcam {
 
     override var rotation = rotation
         set(value) {

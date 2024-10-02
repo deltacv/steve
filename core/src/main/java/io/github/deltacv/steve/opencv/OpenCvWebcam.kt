@@ -24,6 +24,7 @@
 package io.github.deltacv.steve.opencv
 
 import io.github.deltacv.steve.WebcamBase
+import io.github.deltacv.steve.WebcamPropertyControl
 import io.github.deltacv.steve.WebcamRotation
 import org.opencv.core.Mat
 import org.opencv.core.Size
@@ -72,6 +73,10 @@ class OpenCvWebcam @JvmOverloads constructor(
         }
 
     override val name = "Webcam $index"
+
+    override val propertyControl: WebcamPropertyControl get() {
+        throw UnsupportedOperationException("Property control is not supported by OpenCV")
+    }
 
     init {
         this.resolution = resolution

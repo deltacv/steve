@@ -1,0 +1,13 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm'
+    id 'maven-publish'
+}
+
+apply from: '../build.common.gradle'
+apply from: '../publish.gradle'
+
+dependencies {
+    compileOnly project(':core')
+    // https://mvnrepository.com/artifact/org.openpnp/openpnp-capture-java
+    implementation 'org.openpnp:openpnp-capture-java:0.0.28-0'
+}

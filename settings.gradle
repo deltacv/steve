@@ -1,5 +1,6 @@
 rootProject.name = 'steve'
 
 include ':core'
-include ':backend-io.github.deltacv.steve.opencv'
+include ':backend-openpnp'
 include ':backend-openimaj'
+include ':example'

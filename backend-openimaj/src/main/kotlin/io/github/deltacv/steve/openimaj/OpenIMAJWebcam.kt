@@ -24,6 +24,7 @@
 package io.github.deltacv.steve.openimaj
 
 import io.github.deltacv.steve.WebcamBase
+import io.github.deltacv.steve.WebcamPropertyControl
 import io.github.deltacv.steve.WebcamRotation
 import io.github.deltacv.steve.util.FpsLimiter
 import io.github.deltacv.steve.commonResolutions
@@ -56,6 +57,10 @@ class OpenIMAJWebcam @JvmOverloads constructor(
     override val supportedResolutions get() = commonResolutions
 
     override val name: String get() = device.nameStr
+
+    override val propertyControl: WebcamPropertyControl get() {
+        throw UnsupportedOperationException("Property control is not supported by OpenIMAJ")
+    }
 
     override var fps = fps
         set(value) {

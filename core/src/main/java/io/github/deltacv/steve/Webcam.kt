@@ -46,6 +46,8 @@ interface Webcam {
     val index: Int
     val name: String
 
+    val propertyControl: WebcamPropertyControl
+
     fun open()
 
     fun read(mat: Mat)
