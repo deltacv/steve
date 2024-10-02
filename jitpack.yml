@@ -3,4 +3,5 @@ jdk:
 before_install:
   - chmod +x gradlew
 install:
-  - ./gradlew clean build :core:publishToMavenLocal :backend-openimaj:publishToMavenLocal
+  - ./gradlew clean build :core:publishToMavenLocal :backend-openimaj:publishToMavenLocal :backend-openpnp:publishToMavenLocal
+
