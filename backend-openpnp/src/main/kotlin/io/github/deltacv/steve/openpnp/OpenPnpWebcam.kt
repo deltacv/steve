@@ -38,7 +38,14 @@ class OpenPnpWebcam(
         get() {
             val res = mutableListOf<Size>()
 
-            for(format in device.formats) {
+            formatsLoop@for(format in device.formats) {
+                for(size in res) {
+                    if(size.width == format.formatInfo.width.toDouble() &&
+                        size.height == format.formatInfo.height.toDouble()) {
+                        continue@formatsLoop // avoid duplication
+                    }
+                }
+
                 res.add(Size(
                     format.formatInfo.width.toDouble(),
                     format.formatInfo.height.toDouble()
@@ -87,7 +94,6 @@ class OpenPnpWebcam(
         memory.read(0, bytes, 0, bytes.size)
 
         mat.put(0, 0, bytes)
-        Imgproc.cvtColor(mat, mat, Imgproc.COLOR_BGR2RGB)
     }
 
     override fun open() {
@@ -100,9 +106,7 @@ class OpenPnpWebcam(
             }
         }
 
-        val supportedResolutionsStr = supportedResolutions.joinToString(", ") { "[${it.width}x${it.height}]" }
-
-        throw IllegalArgumentException("Resolution $resolution is not supported by ${device.name}. Supported resolutions: $supportedResolutionsStr")
+        throw IllegalArgumentException("Resolution $resolution is not supported by ${device.name}. Supported resolutions: $supportedResolutionsString")
     }
 
     override fun close() {

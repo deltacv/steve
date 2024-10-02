@@ -40,6 +40,8 @@ interface Webcam {
     var resolution: Size
     val supportedResolutions: List<Size>
 
+    val supportedResolutionsString get() = supportedResolutions.joinToString(", ") { "[${it.width}x${it.height}]" }
+
     var rotation: WebcamRotation
     var fps: Double
 
