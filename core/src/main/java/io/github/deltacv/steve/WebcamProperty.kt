@@ -1,5 +1,11 @@
 package io.github.deltacv.steve
 
+data class WebcamPropertyBounds(
+    val min: Int,
+    val max: Int,
+    val default: Int
+)
+
 enum class WebcamProperty {
     BACKLIGHT_COMPENSATION,
     BRIGHTNESS,

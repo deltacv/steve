@@ -5,6 +5,7 @@ import nu.pattern.OpenCV
 import org.opencv.core.Mat
 import org.opencv.core.Size
 import org.opencv.highgui.HighGui
+import kotlin.random.Random
 
 fun main() {
     OpenCV.loadLocally()
