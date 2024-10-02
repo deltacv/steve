@@ -1,8 +1,14 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm'
+    id 'application'
 }
 
 apply from: '../build.common.gradle'
+
+// run Main.kt
+application {
+    mainClassName = 'io.github.deltacv.steve.MainKt'
+}
 
 dependencies {
     implementation project(':core')
