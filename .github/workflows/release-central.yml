@@ -1,9 +1,9 @@
 name: Publish package to the Maven Central Repository
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    # Pattern matched against refs/tags
+    tags:
+      - '*'           # Push events to every tag not containing /
 jobs:
   publish:
     runs-on: ubuntu-latest
