@@ -1,13 +1,60 @@
-tasks.register('sourcesJar', Jar) {
-    from sourceSets.main.allJava
-    archiveClassifier = "sources"
+publishing{
+    publications {
+        maven(MavenPublication) {
+            from components.java
+            description = "Next-generation webcam library for the JVM"
+
+            pom {
+                packaging = "jar"
+                name.set("steve")
+                description.set("Next-generation webcam library for the JVM")
+                url.set("https://github.com/deltacv/stevet/")
+                inceptionYear.set("2024")
+                licenses {
+                    license {
+                        name.set("MIT license")
+                        url.set("https://opensource.org/licenses/MIT")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set("serivesmejia")
+                        name.set("Sebastian Erives")
+                        email.set("serivesmejia@deltacv.org")
+                    }
+                }
+                scm {
+                    connection.set("scm:git:git@github.com:deltacv/steve.git")
+                    developerConnection.set("scm:git:ssh:git@github.com:deltacv/steve.git")
+                    url.set("https://github.com/deltacv/steve")
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url = layout.buildDirectory.dir("staging-deploy").get().asFile.toURI()
+        }
+    }
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            artifact sourcesJar
+jreleaser {
+    signing {
+        active = 'ALWAYS'
+        armored = true
+    }
+    deploy {
+        maven {
+            nexus2 {
+                'maven-central' {
+                    active = 'ALWAYS'
+                    url = 'https://s01.oss.sonatype.org/service/local'
+                    snapshotUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
+                    closeRepository = true
+                    releaseRepository = false
+                    stagingRepository('target/staging-deploy')
+                }
+            }
         }
     }
 }

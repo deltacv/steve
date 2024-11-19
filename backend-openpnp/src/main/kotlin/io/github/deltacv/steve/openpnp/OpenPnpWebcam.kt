@@ -17,11 +17,13 @@ class OpenPnpWebcam(
     rotation: WebcamRotation = WebcamRotation.UPRIGHT
 ) : WebcamBase(rotation) {
 
+    private val lock = Any()
+
     private var stream: CaptureStream? = null
     private var reflectStream: ReflectCaptureStream? = null
 
     override val isOpen: Boolean
-        get() = stream != null
+        get() = stream != null && stream!!.hasNewFrame()
 
     override var resolution = supportedResolutions.getOrElse(0) {
         throw IllegalStateException("No supported resolutions found for ${device.name}")
@@ -77,14 +79,16 @@ class OpenPnpWebcam(
         val context = safeStream.context
         val memory = safeStream.memory
 
-        val result = OpenpnpCaptureLibrary.INSTANCE.Cap_captureFrame(
-            context,
-            safeStream.captureStream.streamId,
-            memory, memory.size().toInt()
-        )
+        synchronized(lock) {
+            val result = OpenpnpCaptureLibrary.INSTANCE.Cap_captureFrame(
+                context,
+                safeStream.captureStream.streamId,
+                memory, memory.size().toInt()
+            )
 
-        if (result != OpenpnpCaptureLibrary.CAPRESULT_OK) {
-            throw CaptureException(result);
+            if (result != OpenpnpCaptureLibrary.CAPRESULT_OK) {
+                throw CaptureException(result);
+            }
         }
 
         if(bytes.size != memory.size().toInt()) {
@@ -98,10 +102,11 @@ class OpenPnpWebcam(
 
     override fun open() {
         for(format in device.formats) {
-            if(format.formatInfo.width == resolution.width.toInt() &&
-                format.formatInfo.height == resolution.height.toInt()) {
-                stream = device.openStream(format)
-                reflectStream = ReflectCaptureStream(stream!!)
+            if(format.formatInfo.width == resolution.width.toInt() && format.formatInfo.height == resolution.height.toInt()) {
+                synchronized(lock) {
+                    stream = device.openStream(format)
+                    reflectStream = ReflectCaptureStream(stream!!)
+                }
                 return
             }
         }
@@ -110,8 +115,10 @@ class OpenPnpWebcam(
     }
 
     override fun close() {
-        stream?.close()
-        stream = null
+        synchronized(lock) {
+            stream?.close()
+            stream = null
+        }
     }
 
 }

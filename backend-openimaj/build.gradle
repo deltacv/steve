@@ -4,7 +4,6 @@ plugins {
 }
 
 apply from: '../build.common.gradle'
-apply from: '../publish.gradle'
 
 dependencies {
     compileOnly project(':core')

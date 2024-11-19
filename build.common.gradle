@@ -16,20 +16,17 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:1.7.32'
 }
 
-
-if (project.getPluginManager().hasPlugin("java")) {
-    java {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(11)
     }
+
+    withJavadocJar()
+    withSourcesJar()
 }
 
-if (project.getPluginManager().hasPlugin("org.jetbrains.kotlin.jvm")) {
-    compileKotlin {
-        kotlinOptions {
-            jvmTarget = "1.8"
-            freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
-            useIR = true
-        }
-    }
+tasks.jar {
+    enabled = true
+    // Remove `plain` postfix from jar file name
+    archiveClassifier.set("")
 }
