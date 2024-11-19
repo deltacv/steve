@@ -33,7 +33,7 @@ publishing{
     }
     repositories {
         maven {
-            url = layout.buildDirectory.dir("staging-deploy").get().asFile.toURI()
+            url = layout.buildDirectory.dir("staging-deploy-${project.name}").get().asFile.toURI()
         }
     }
 }
@@ -52,7 +52,7 @@ jreleaser {
                     snapshotUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
                     closeRepository = true
                     releaseRepository = false
-                    stagingRepository('target/staging-deploy')
+                    stagingRepository("target/staging-deploy-${project.name}")
                 }
             }
         }
