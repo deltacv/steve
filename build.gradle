@@ -17,6 +17,6 @@ buildscript {
 }
 
 subprojects {
-    group 'com.github.deltacv'
+    group 'com.github.deltacv.steve'
     version '1.0.0'
 }
