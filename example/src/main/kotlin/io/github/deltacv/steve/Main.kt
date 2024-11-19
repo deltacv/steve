@@ -24,7 +24,7 @@ fun main() {
 
     val frame = Mat()
 
-    while(true) {
+    while(webcam.isOpen) {
         webcam.read(frame)
         Imgproc.cvtColor(frame, frame, Imgproc.COLOR_RGB2BGR)
         HighGui.imshow("Webcam", frame)

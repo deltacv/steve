@@ -22,8 +22,10 @@ class OpenPnpWebcam(
     private var stream: CaptureStream? = null
     private var reflectStream: ReflectCaptureStream? = null
 
+    private var streaming = false
+
     override val isOpen: Boolean
-        get() = stream != null && stream!!.hasNewFrame()
+        get() = stream != null && streaming
 
     override var resolution = supportedResolutions.getOrElse(0) {
         throw IllegalStateException("No supported resolutions found for ${device.name}")
@@ -87,6 +89,7 @@ class OpenPnpWebcam(
             )
 
             if (result != OpenpnpCaptureLibrary.CAPRESULT_OK) {
+                streaming = false
                 throw CaptureException(result);
             }
         }
@@ -96,7 +99,6 @@ class OpenPnpWebcam(
         }
 
         memory.read(0, bytes, 0, bytes.size)
-
         mat.put(0, 0, bytes)
     }
 
@@ -106,6 +108,7 @@ class OpenPnpWebcam(
                 synchronized(lock) {
                     stream = device.openStream(format)
                     reflectStream = ReflectCaptureStream(stream!!)
+                    streaming = true
                 }
                 return
             }
@@ -118,6 +121,7 @@ class OpenPnpWebcam(
         synchronized(lock) {
             stream?.close()
             stream = null
+            streaming = false
         }
     }
 
