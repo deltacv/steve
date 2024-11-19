@@ -1,10 +1,9 @@
 name: Publish package to the Maven Central Repository
 on:
   push:
-    tags:
-      - v*
+    branches: [ master ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 jobs:
   publish:
     runs-on: ubuntu-latest
