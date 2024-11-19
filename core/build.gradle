@@ -1,9 +1,7 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm'
     id 'java'
-    id 'maven-publish'
-    id 'org.jreleaser' version '1.15.0'
-    id "signing"
+    id "com.vanniktech.maven.publish" version "0.30.0"
 }
 
 apply from: '../build.common.gradle'
