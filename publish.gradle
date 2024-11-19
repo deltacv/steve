@@ -1,0 +1,3 @@
+mavenPublishing {
+    pomFromGradleProperties()
+}
