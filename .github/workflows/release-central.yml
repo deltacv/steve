@@ -16,8 +16,6 @@ jobs:
           distribution: 'adopt'
       - name: Run chmod to make gradlew executable
         run: chmod +x ./gradlew
-      - name: Publish package to local staging directory
-        run: ./gradlew :core:publish :backend-openpnp:publish
       - name: Publish package to maven central
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.JRELEASER_MAVENCENTRAL_USERNAME }}
